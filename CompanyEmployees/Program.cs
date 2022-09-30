@@ -10,6 +10,9 @@ LogManager.LoadConfiguration(string.Concat(Directory.GetCurrentDirectory(), "/nl
 builder.Services.ConfigureCors();
 builder.Services.ConfigureIISConfiguration();
 builder.Services.ConfigureLoggerService();
+builder.Services.ConfigureRepositoryManager();
+builder.Services.ConfigureServiceManager();
+builder.Services.ConfigureSqlContext(builder.Configuration);
 
 builder.Services.AddControllers();
 
@@ -17,17 +20,13 @@ var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
-{
     app.UseDeveloperExceptionPage();
-}
 else
-{
     app.UseHsts();
-}
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-app.UseForwardedHeaders(new() { ForwardedHeaders = ForwardedHeaders.All });
+app.UseForwardedHeaders(new ForwardedHeadersOptions {ForwardedHeaders = ForwardedHeaders.All});
 
 app.UseCors("CorsPolicy");
 
